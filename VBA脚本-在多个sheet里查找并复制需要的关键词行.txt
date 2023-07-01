@@ -1,0 +1,26 @@
+Sub CopyRows()
+    Dim ws As Worksheet
+    Dim newWs As Worksheet
+    Dim rng As Range
+    Dim cell As Range
+    Dim nextRow As Long
+
+    ' 创建一个新的工作表用于存放复制的行
+    Set newWs = ThisWorkbook.Sheets.Add
+    newWs.Name = "Filtered Data"
+
+    ' 遍历工作簿中的所有工作表
+    For Each ws In ThisWorkbook.Sheets
+        ' 如果工作表的名称不是"Filtered Data"，则处理该工作表
+        If ws.Name <> "Filtered Data" Then
+            ' 遍历"处理"列中的所有单元格
+            For Each cell In ws.Columns({关键词所在的列数}).Cells
+                ' 如果单元格的值包含"{你需要的查找的关键词}"，则复制整行到新的工作表
+                If InStr(cell.Value, "{你需要的查找的关键词}") > 0 Then
+                    nextRow = newWs.Cells(newWs.Rows.Count, 1).End(xlUp).Row + 1
+                    cell.EntireRow.Copy Destination:=newWs.Cells(nextRow, 1)
+                End If
+            Next cell
+        End If
+    Next ws
+End Sub
